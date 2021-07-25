@@ -2,26 +2,28 @@ package com.javaex.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.javaex.dao.PhoneDao;
 import com.javaex.vo.PersonVo;
-import com.javax.dao.PhoneDao;
 
 @Controller
 public class PhoneController {
-
+	
+	@Autowired
+	private PhoneDao phoneDao;
+	
 	// 리스트
 	@RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
 	public String list(Model model) {
 		System.out.println("[list]");
 
-		PhoneDao phoneDao = new PhoneDao();
 		List<PersonVo> personList = phoneDao.getPersonList();
 		System.out.println(personList);
 		//값을 model 담는다 -->dispatcherServlet 에전달된다 --- request의 attritube영역에 넣는다.
@@ -45,7 +47,6 @@ public class PhoneController {
 	 public String write(@ModelAttribute PersonVo personVo){ 
 		 System.out.println("[write]");
 		 
-		 PhoneDao phoneDao = new PhoneDao();
 		 phoneDao.personInsert(personVo);
 		 //@ModelAttribute --> new PersonVo() // --> 기본생성자 + setter
 	  
@@ -58,7 +59,6 @@ public class PhoneController {
 	  public String personDelete(@RequestParam("personId") int personId) {
 		  System.out.println("[delete]");
 		  
-		  PhoneDao phoneDao = new PhoneDao();
 		  phoneDao.personDelete(personId);
 		  
 		  
@@ -70,7 +70,6 @@ public class PhoneController {
 	  public String updateForm(@RequestParam("personId") int personId ,Model model) {
 		  System.out.println("[updateForm]");
 		  
-		  PhoneDao phoneDao = new PhoneDao();
 		  PersonVo updateOne = phoneDao.getPerson(personId);
 
 		  model.addAttribute("updateOne", updateOne);
@@ -81,8 +80,7 @@ public class PhoneController {
 	  @RequestMapping("/update")
 	  public String update(@ModelAttribute PersonVo personVo) {
 		  System.out.println("[update]");
-		  
-		  PhoneDao phoneDao = new PhoneDao();
+		 
 		  phoneDao.personUpdate(personVo);
 		  
 		  
